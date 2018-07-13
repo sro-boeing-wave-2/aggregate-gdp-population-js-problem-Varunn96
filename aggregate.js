@@ -6,9 +6,6 @@ const fs = require('fs');
 const promise = require('promise');
 
 const aggregate = (filePath) => {
-  // let data = '';
-  // let continentdata = '';
-
   let dataarr = [];
   let contdataarr = [];
 
@@ -21,33 +18,7 @@ const aggregate = (filePath) => {
       }
     });
   });
-
-  const readfile2 = filepath => new Promise((resolve, reject) => {
-    fs.readFile(filepath, 'utf8', (error, result) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-  promise.all(readfile1(filePath), readfile2('./data/ccmap.txt')).then((values) => {
-    // .catch(error => console.error(error));
-  // fs.readFile(filePath, 'utf8', (err, dat) => {
-  //   if (err) {
-  //     throw err;
-  //   } else {
-  //     data = dat;
-  //   }
-  // });
-
-  // fs.readFile('./data/ccmap.txt', 'utf8', (err2, continentdat) => {
-  //   if (err2) {
-  //     throw err2;
-  //   } else {
-  //     continentdata = continentdat;
-  //   }
-  // });
+  promise.all(readfile1(filePath), readfile1('./data/ccmap.txt')).then((values) => {
     dataarr = values[0].toString().replace(/"/g, '').split('\n');
     contdataarr = values[1].toString().split('\n');
     const array1 = [];
