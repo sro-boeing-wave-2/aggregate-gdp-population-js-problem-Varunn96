@@ -4,7 +4,7 @@
  */
 const fs = require('fs');
 
-const aggregate = (filePath) => {
+const aggregate = filePath => new Promise((resolve1, reject1) => {
   // readfile functions with Promise. readfile1 and readfile2 recieve filepaths
   // and fs.readFile reads the file. On successful reading, resolve returns result. In case of
   // failure, reject returns error.
@@ -63,15 +63,15 @@ const aggregate = (filePath) => {
       for (let i = 0; i < array1.length - 1; i += 1) {
         populationarray.push([array1[i][0], array1[i][4]]);
       }
-      // console.log(populationarray[0][0]); Argentina
-      // console.log(populationarray[0][1]); Population of Argentina
+      // console.log(populationarray[0][0]); ===> Argentina
+      // console.log(populationarray[0][1]); ===> Population of Argentina
 
       // Filtering array1 to get only GDP of 2012
       for (let i = 0; i < array1.length - 1; i += 1) {
         gdparray.push([array1[i][0], array1[i][7]]);
       }
-      // console.log(gdparray[0][0]); Argentina
-      // console.log(gdparray[0][1]); GDP of Argentina
+      // console.log(gdparray[0][0]); ===> Argentina
+      // console.log(gdparray[0][1]); ===> GDP of Argentina
 
       // Convert filtered arrays to maps.
       // popmap : Country => Population of 2012
@@ -80,30 +80,30 @@ const aggregate = (filePath) => {
       const gdpmap = new Map(gdparray);
 
       // Create map to store Continent => Aggregate GDP
-      const gdp = new Map();
+      const agggdp = new Map();
       // Create map to store Continent => Aggregate Population
-      const pop = new Map();
+      const aggpop = new Map();
 
       // For each continent(value) of contdatamap, if gdp has continent and gdpmap
       // has country(key) then set key and value of gdp as sum of gdp and continent
       // respectively (similarly for pop) else if gdpmap has country set key and value
       // of gdp as gdp for that country and continent repectivelty.
       contdatamap.forEach((value, key) => {
-        if (gdp.has(value) && gdpmap.has(key)) {
-          gdp.set(value, parseFloat(gdp.get(value)) + parseFloat(gdpmap.get(key)));
-          pop.set(value, parseFloat(pop.get(value)) + parseFloat(popmap.get(key)));
+        if (agggdp.has(value) && gdpmap.has(key)) {
+          agggdp.set(value, parseFloat(agggdp.get(value)) + parseFloat(gdpmap.get(key)));
+          aggpop.set(value, parseFloat(aggpop.get(value)) + parseFloat(popmap.get(key)));
         } else if (gdpmap.has(key)) {
-          gdp.set(value, parseFloat(gdpmap.get(key)));
-          pop.set(value, parseFloat(popmap.get(key)));
+          agggdp.set(value, parseFloat(gdpmap.get(key)));
+          aggpop.set(value, parseFloat(popmap.get(key)));
         }
       });
 
       // outputstring to store output in required format
       const outputstring = {};
-      gdp.forEach((value, key) => {
+      agggdp.forEach((value, key) => {
         outputstring[key] = {
           GDP_2012: value,
-          POPULATION_2012: pop.get(key),
+          POPULATION_2012: aggpop.get(key),
         };
       });
 
@@ -114,9 +114,9 @@ const aggregate = (filePath) => {
           else resolve(result2);
         });
       });
-      writefile('./output/output.json').then(result2 => console.log(result2));
+      writefile('./output/output.json').then(store => resolve1(store), err => reject1(err));
     })
     .catch(errors => console.log(errors));
-};
+});
 
 module.exports = aggregate;
