@@ -59,17 +59,13 @@ const aggregate = filePath => new Promise((resolve1, reject1) => {
       const populationarray = [];
       const gdparray = [];
 
-      // Filtering array1 to get only Population of 2012
+      // Filtering array1 to get only Population and GDP of 2012
       for (let i = 0; i < array1.length - 1; i += 1) {
         populationarray.push([array1[i][0], array1[i][4]]);
+        gdparray.push([array1[i][0], array1[i][7]]);
       }
       // console.log(populationarray[0][0]); ===> Argentina
       // console.log(populationarray[0][1]); ===> Population of Argentina
-
-      // Filtering array1 to get only GDP of 2012
-      for (let i = 0; i < array1.length - 1; i += 1) {
-        gdparray.push([array1[i][0], array1[i][7]]);
-      }
       // console.log(gdparray[0][0]); ===> Argentina
       // console.log(gdparray[0][1]); ===> GDP of Argentina
 
@@ -109,7 +105,7 @@ const aggregate = filePath => new Promise((resolve1, reject1) => {
 
       // convert outputstring to JSON and write into output file
       const writefile = filepath3 => new Promise((resolve, reject) => {
-        fs.writeFile(filepath3, JSON.stringify(outputstring), (err, result2) => {
+        fs.writeFile(filepath3, JSON.stringify(outputstring, 2, 2), (err, result2) => {
           if (err) reject(err);
           else resolve(result2);
         });
